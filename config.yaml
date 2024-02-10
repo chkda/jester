@@ -24,4 +24,6 @@ applications:
   deployments:
   - name: ModelServer
     user_config: 
-      engine: ggml
+      engine: hf
+      model_path: microsoft/DialoGPT-small
+      stream: true

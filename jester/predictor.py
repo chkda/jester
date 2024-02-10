@@ -9,14 +9,17 @@ class LLMPredictor:
 
     def __init__(self, config: Dict[str, Any]):
         self.engine = None
-        if config['engine'] == "hf":
-            self.engine = HFEngine()
-        elif config['engine'] == "vllm":
+        self.config = config
+        if self.config['engine'] == "hf":
+            self.engine = HFEngine(model_path=config['model_path'])
+        elif self.config['engine'] == "vllm":
             self.engine = VLLMEngine()
-        elif config['engine'] == "ggml":
+        elif self.config['engine'] == "ggml":
             self.engine = GGMLEngine()
         else:
             raise RuntimeError("Unknown engine type")
 
-    def predict(self):
+    def predict(self, prompt: str):
+        if self.config['stream']:
+            return self.engine.stream_response(prompt)
         return self.engine.run("dummy input")
